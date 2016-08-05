@@ -48,6 +48,25 @@ class Activity extends Connect{
         return $data;
     }
     
+    function findUserList($activity_id, $user_id){
+        $findEmployee = $this->db->prepare("SELECT `total` FROM `employee` WHERE `activity_id` = :activity_id AND `user_id` = :user_id");
+        $findEmployee->bindParam(':activity_id', $activity_id);
+        $findEmployee->bindParam(':user_id', $user_id);
+        $findEmployee->execute();
+        $result = $findEmployee->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+    }
+    
+    function userJoinActivity($activity_id, $user_id, $user_name, $newCarryCount){
+        $addUserActivity = $this->db->prepare("UPDATE `employee` SET `total` = :total WHERE `activity_id` = :activity_id AND `user_id` = :user_id AND `user_name` = :user_name");
+        $addUserActivity->bindParam(':total', $newCarryCount);
+        $addUserActivity->bindParam(':activity_id', $activity_id);
+        $addUserActivity->bindParam(':user_id', $user_id);
+        $addUserActivity->bindParam(':user_name', $user_name);
+        $addUserActivity->execute();
+        return true;
+    }
+    
 }
 
 ?>

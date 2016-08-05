@@ -2,12 +2,14 @@
 
 class CreateController extends Controller{
     
+    // 顯示後台建立活動頁面
     function index(){
         $showAllActivity = $this->model("Activity");
         $data = $showAllActivity->findActivity();
         $this->view("create_activity", $data);
     }
     
+    // 建立活動
     function createActivity(){
         
         $activity_name = $_POST['activity_name'];
