@@ -3,10 +3,13 @@
 class CreateController extends Controller{
     
     function index(){
+        $showAllActivity = $this->model("Activity");
+        $data = $showAllActivity->findActivity();
         $this->view("create_activity", $data);
     }
     
     function createActivity(){
+        
         $activity_name = $_POST['activity_name'];
         $count_limit = $_POST['count_limit'];
         $rdoPet = $_POST['rdoPet'];
@@ -14,11 +17,19 @@ class CreateController extends Controller{
         $end_time = $_POST['end_time'];
         $employee_id = $_POST['userid'];
         $employee_name = $_POST['username'];
+        $t=time();
+        $t.=$a=rand(1,2000);
+        $url=md5($t);
         
-        $createActivity = $this->model("Activity");
-        $createdData = $createActivity->createEvent($activity_name, $count_limit, $rdoPet, $start_time, $end_time, $employee_id, $employee_name);
-        
-        // header("location:/Activity/Create/index");
+        if($start_time > $end_time){
+            return "結束時間需大於開始時間";
+        }
+        else{
+            $createActivity = $this->model("Activity");
+            $createdData = $createActivity->createEvent($activity_name, $count_limit, $rdoPet, $start_time, $end_time, $employee_id, $employee_name, $url);
+            
+            header("location:/Activity/Create/index");
+        }
     }
     
 }

@@ -2,14 +2,23 @@
 
 class Activity extends Connect{
     
-    function createEvent($activity_name, $count_limit, $rdoPet, $start_time, $end_time, $employee_id, $employee_name){
-        $insertActivity = $this->db->prepare("INSERT INTO `create_activity` (`activity_name`, `count`, `carry`, `created_time`, `end_time`)
-                                            VALUES (:activity_name, :count, :carry, :created_time, :end_time)");
+    function findActivity(){
+        $allActivity = $this->db->prepare("SELECT * FROM `create_activity`");
+        $allActivity->execute();
+        $result = $allActivity->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+    }
+    
+    function createEvent($activity_name, $count_limit, $rdoPet, $start_time, $end_time, $employee_id, $employee_name, $url){
+        
+        $insertActivity = $this->db->prepare("INSERT INTO `create_activity` (`activity_name`, `count`, `carry`, `created_time`, `end_time`, `url`)
+                                            VALUES (:activity_name, :count, :carry, :created_time, :end_time, :url)");
         $insertActivity->bindParam(':activity_name', $activity_name);
         $insertActivity->bindParam(':count', $count_limit);
         $insertActivity->bindParam(':carry', $rdoPet);
         $insertActivity->bindParam(':created_time', $start_time);
         $insertActivity->bindParam(':end_time', $end_time);
+        $insertActivity->bindParam(':url', $url);
         $insertActivity->execute();
     
         $findId = $this->db->prepare("SELECT `id` FROM `create_activity` WHERE `activity_name` = :activity_name");
@@ -28,7 +37,17 @@ class Activity extends Connect{
         
         $i++;
         }
+        return true;
     }
+    
+    function signUrlPage($url){
+        $findUrl = $this->db->prepare("SELECT * FROM `create_activity` WHERE `url`=:url");
+        $findUrl->bindParam(':url', $url);
+        $findUrl->execute();
+        $data = $findUrl->fetchAll(PDO::FETCH_ASSOC);
+        return $data;
+    }
+    
 }
 
 ?>
