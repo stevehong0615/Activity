@@ -24,13 +24,14 @@ class CreateController extends Controller{
         $url=md5($t);
         
         if($start_time > $end_time){
-            return "結束時間需大於開始時間";
+            $this->view("alert", '結束時間需大於開始時間');
+            header("refresh:0, url=https://lab-stevehong0615.c9users.io/Activity/Create/index");
         }
         else{
             $createActivity = $this->model("Activity");
             $createdData = $createActivity->createEvent($activity_name, $count_limit, $rdoPet, $start_time, $end_time, $employee_id, $employee_name, $url);
-            
-            header("location:/Activity/Create/index");
+            $this->view("alert", '活動建立成功');
+            header("refresh:0, url=https://lab-stevehong0615.c9users.io/Activity/Create/index");
         }
     }
     
