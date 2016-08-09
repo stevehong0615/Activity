@@ -27,12 +27,21 @@ class CreateController extends Controller{
             $this->view("alert", '結束時間需大於開始時間');
             header("refresh:0, url=https://lab-stevehong0615.c9users.io/Activity/Create/index");
         }
-        else{
+        elseif($start_time <= $end_time && $activity_name != null && $rdoPet != null){
             $createActivity = $this->model("Activity");
             $createdData = $createActivity->createEvent($activity_name, $count_limit, $rdoPet, $start_time, $end_time, $employee_id, $employee_name, $url);
+            
             $this->view("alert", '活動建立成功');
             header("refresh:0, url=https://lab-stevehong0615.c9users.io/Activity/Create/index");
         }
+    }
+    
+    function joinCount(){
+        $joinCount = $this->model('Activity');
+        $total = $joinCount->joinCount();
+        $data = $total;
+        
+        $this->view('show',$data);
     }
     
 }

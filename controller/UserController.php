@@ -21,23 +21,26 @@ class UserController extends Controller{
         $activity_id = $_POST['id'];
         $user_id = $_POST['user_id'];
         $user_name = $_POST['user_name'];
-        $newCarryCount = $_POST['newCarryCount']+1;
+        $newCarryCount = $_POST['newCarryCount'] + 1;
         
-        $findList = $this->model("Activity");
-        $findUser = $findList->findUserList($activity_id, $user_id, $user_name, $newCarryCount);
-        // echo $findUser[0]['total'];
-        if($findUser[0]['total'] == NULL){
-            $addList = $this->model("Activity");
-            $addUserTotal = $addList->userJoinActivity($activity_id, $user_id, $user_name, $newCarryCount);
+        $sql = $this->model("Activity");
+        
+        $findUser = $sql->findUserList($activity_id, $user_id, $user_name, $newCarryCount);
+        
+        
+        if($findUser[0]['total'] == NULL && $user_id == $findUser[0]['user_id'] && $user_name == $findUser[0]['user_name']){
+            $addUserTotal = $sql->userJoinActivity($activity_id, $user_id, $user_name, $newCarryCount);
             $this->view("alert", '報名成功');
             header("refresh:0, url=https://lab-stevehong0615.c9users.io/Activity/User/index");
         }
         else{
-            $this->view("alert", '已報名過，不能重複報名');
+            $this->view("alert", '無權限報名或重複報名');
             header("refresh:0, url=https://lab-stevehong0615.c9users.io/Activity/User/index");
         }
         
     }
+    
+    
     
 }
 

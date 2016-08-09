@@ -49,7 +49,7 @@ class Activity extends Connect{
     }
     
     function findUserList($activity_id, $user_id){
-        $findEmployee = $this->db->prepare("SELECT `total` FROM `employee` WHERE `activity_id` = :activity_id AND `user_id` = :user_id");
+        $findEmployee = $this->db->prepare("SELECT `total`, `user_id`, `user_name` FROM `employee` WHERE `activity_id` = :activity_id AND `user_id` = :user_id");
         $findEmployee->bindParam(':activity_id', $activity_id);
         $findEmployee->bindParam(':user_id', $user_id);
         $findEmployee->execute();
@@ -65,6 +65,21 @@ class Activity extends Connect{
         $addUserActivity->bindParam(':user_name', $user_name);
         $addUserActivity->execute();
         return true;
+    }
+    
+    function joinCount(){
+      $joinCount = $this->db->prepare("SELECT SUM(`total`) FROM `employee` WHERE `activity_id` = :activity_id");
+      $joinCount->bindParam(':activity_id', $_GET['id']);
+      $joinCount->execute();
+      $joinResult = $joinCount->fetch(PDO::FETCH_ASSOC);
+      
+      $totalCount = $this->db->prepare("SELECT `count` FROM `create_activity` WHERE `id` = :id");
+      $totalCount->bindParam(':id', $_GET['id']);
+      $totalCount->execute();
+      $totalResult = $totalCount->fetch(PDO::FETCH_ASSOC);
+      
+      $count = $totalResult['count'] - $joinResult['SUM(`total`)'];
+      return $count;
     }
     
 }
